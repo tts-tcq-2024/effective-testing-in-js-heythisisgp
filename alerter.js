@@ -22,5 +22,12 @@ function alertInCelcius(farenheit) {
 
 alertInCelcius(400.5);
 alertInCelcius(303.6);
+
+// Strengthened tests to make them fail
+assert(alertFailureCount === 0, "alertFailureCount should be 0");
+assert(networkAlertStub(100) === 200, "networkAlertStub should return 200 for ok");
+assert(networkAlertStub(500) === 500, "networkAlertStub should return 500 for not-ok");
+assert(alertInCelcius(212) === undefined, "alertInCelcius should not return anything");
+
 console.log(`${alertFailureCount} alerts failed.`);
 console.log('All is well (maybe!)');
