@@ -1,34 +1,45 @@
-let alertFailureCount = 0;
+const config = {
+    useRealNetwork: false 
+};
 
-// Network alert function, can be swapped out for different environments
-function networkAlert(celcius) {
-    // Stub implementation
-    console.log(`Alert! Temperature is ${celcius} degrees`);
+// Stub implementation for testing
+function stubNetworkAlert(celcius) {
     return 200; // always returns 200 for the stub
 }
 
-// Updated implementation using dependency injection
+// Real network implementation (placeholder)
+function realNetworkAlert(celcius) {
+    console.log(`Real Alert! Temperature is ${celcius} degrees`);
+    return 200; 
+}
+
+// Function to get the appropriate network alert function based on configuration
+function getNetworkAlertFunction() {
+    return config.useRealNetwork ? realNetworkAlert : stubNetworkAlert;
+}
+
+// Function to send alert
 function alertInCelcius(farenheit, networkAlertFunc) {
     const celcius = (farenheit - 32) * 5 / 9;
     const returnCode = networkAlertFunc(celcius);
     if (returnCode !== 200) {
-        alertFailureCount += 1; // Correctly increment failure count
+        alertFailureCount += 1; 
     }
 }
 
 // Tests
 function testAlertInCelcius() {
-    alertFailureCount = 0; // Reset failure count
+    alertFailureCount = 0;
 
-    // Test case 1
-    let result = alertInCelcius(400.5, networkAlert);
+    let networkAlertFunc = getNetworkAlertFunction();
+    alertInCelcius(400.5, networkAlertFunc);
     console.assert(alertFailureCount === 0, `Expected 0 failures, but got ${alertFailureCount}`);
 
-    // Test case 2 - Modify stub to return a non-200 code
-    function failingNetworkAlert(celcius) {
+    function failingStubNetworkAlert(celcius) {
         return 500; // Simulate a network failure
     }
-    result = alertInCelcius(303.6, failingNetworkAlert);
+    networkAlertFunc = failingStubNetworkAlert;
+    alertInCelcius(303.6, networkAlertFunc);
     console.assert(alertFailureCount === 1, `Expected 1 failure, but got ${alertFailureCount}`);
 }
 
@@ -36,3 +47,8 @@ function testAlertInCelcius() {
 testAlertInCelcius();
 console.log(`${alertFailureCount} alerts failed.`);
 console.log('All is well (maybe!)');
+
+// Example of switching environment
+config.useRealNetwork = true; // Switch to real network communication
+let networkAlertFunc = getNetworkAlertFunction();
+alertInCelcius(400.5, networkAlertFunc);
