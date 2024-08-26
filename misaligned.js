@@ -1,33 +1,19 @@
-const {expect} = require('chai')
+const {expect} = require('chai');
 
-function getColorMap() {
+function print_color_map() {
     const majorColors = ["White", "Red", "Black", "Yellow", "Violet"];
     const minorColors = ["Blue", "Orange", "Green", "Brown", "Slate"];
-    const colorMap = [];
+    let output = '';
     for (let i = 0; i < majorColors.length; i++) {
         for (let j = 0; j < minorColors.length; j++) {
-            colorMap.push(`${i * 5 + j} | ${majorColors[i]} | ${minorColors[j]}`);
+            output += `${i * 5 + j} | ${majorColors[i]} | ${minorColors[j]}\n`;
         }
     }
-    return colorMap;
+    return output;
 }
 
-function printColorMap(colorMap) {
-    colorMap.forEach((line) => console.log(line));
-}
-
-function getColorMapLength(colorMap) {
-    return colorMap.length;
-}
-
-const colorMap = getColorMap();
-printColorMap(colorMap);
-const result = getColorMapLength(colorMap);
-
-// Test cases
-expect(result).equals(25);
-expect(colorMap[0]).equals('0 | White | Blue'); // Test for correct alignment
-expect(colorMap[24]).equals('24 | Violet | Slate'); // Test for correct alignment
-expect(getColorMapLength(getColorMap())).equals(25); // Test for correct length
-
+result = print_color_map();
+expect(result).to.contain('1 | White | Blue'); // Pair number should start from 1
+expect(result).to.contain('25 | Violet | Slate'); // Pair number should end at 25
+expect(result).not.to.contain('0 | White | Blue'); // Pair number should not start from 0
 console.log('All is well (maybe!)');
